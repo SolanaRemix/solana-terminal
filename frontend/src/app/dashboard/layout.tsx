@@ -1,4 +1,4 @@
-import '../styles/globals.css';
+import '../../styles/globals.css';
 import { Sidebar } from '@/components/ui/Sidebar';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {

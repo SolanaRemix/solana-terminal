@@ -13,5 +13,6 @@ export class SignalsController {
 
   /** Server-sent events stream for live signals */
   @Sse('stream')
+  @UseGuards(AuthGuard('jwt'))
   stream(): Observable<MessageEvent> { return this.svc.stream(); }
 }

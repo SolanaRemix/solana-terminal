@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { GlassPanel } from '@/components/ui/GlassPanel';
 import { Button } from '@/components/ui/Button';
 
@@ -13,6 +13,13 @@ type Strategy = {
 };
 
 const TEMPLATES = ['Scalper 250x', 'Swing 50x', 'Market-neutral Basis', 'Volatility Breakout'];
+
+const INDICATOR_NAMES = [
+  'Price Momentum', 'Funding Rate Skew', 'Open Interest',
+  'Orderbook Imbalance', 'Volatility Bands', 'Correlation w/ BTC',
+  'Whale Activity', 'Liquidity Depth', 'Spread vs CEX',
+  'MEV Risk Score', 'Time-of-Day Vol', 'Volume Spike',
+];
 
 const DEFAULT_STRATEGIES: Strategy[] = [
   { id: '1', name: 'Scalper 250x',        type: 'leverage', leverage: '250x', status: 'active' },
@@ -27,6 +34,12 @@ export default function StrategiesPage() {
     setStrategies(prev =>
       prev.map(s => s.id === id ? { ...s, status: s.status === 'active' ? 'paused' : 'active' } : s)
     );
+
+  // Compute indicator values once to avoid flickering on re-renders.
+  const indicatorValues = useMemo(
+    () => INDICATOR_NAMES.map(name => ({ name, value: (Math.random() * 100).toFixed(1) })),
+    [],
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -75,15 +88,10 @@ export default function StrategiesPage() {
       {/* Opportunity indicators panel */}
       <GlassPanel title="Opportunity Indicators — SOL-PERP" glow="magenta">
         <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-          {[
-            'Price Momentum', 'Funding Rate Skew', 'Open Interest',
-            'Orderbook Imbalance', 'Volatility Bands', 'Correlation w/ BTC',
-            'Whale Activity', 'Liquidity Depth', 'Spread vs CEX',
-            'MEV Risk Score', 'Time-of-Day Vol', 'Volume Spike',
-          ].map((ind, i) => (
-            <div key={ind} className="rounded border border-white/5 px-3 py-2 text-xs">
-              <p className="text-text-muted">{ind}</p>
-              <p className="mt-1 font-semibold text-accent-1">{(Math.random() * 100).toFixed(1)}</p>
+          {indicatorValues.map(({ name, value }) => (
+            <div key={name} className="rounded border border-white/5 px-3 py-2 text-xs">
+              <p className="text-text-muted">{name}</p>
+              <p className="mt-1 font-semibold text-accent-1">{value}</p>
             </div>
           ))}
         </div>

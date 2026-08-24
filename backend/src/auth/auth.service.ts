@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
 
 // In production replace with TypeORM repository
-const USERS = new Map<string, { passwordHash: string; tier: string }>();
+const USERS = new Map<string, { id: string; passwordHash: string; tier: string }>();
 
 @Injectable()
 export class AuthService {
@@ -11,7 +12,7 @@ export class AuthService {
 
   async register(email: string, password: string) {
     const passwordHash = await bcrypt.hash(password, 12);
-    USERS.set(email, { passwordHash, tier: 'free' });
+    USERS.set(email, { id: randomUUID(), passwordHash, tier: 'free' });
     return { message: 'User registered' };
   }
 
@@ -20,7 +21,8 @@ export class AuthService {
     if (!user || !(await bcrypt.compare(password, user.passwordHash))) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const token = this.jwtService.sign({ sub: email, tier: user.tier });
+    // Use stable UUID as subject, not email, so tokens survive email changes.
+    const token = this.jwtService.sign({ sub: user.id, tier: user.tier });
     return { access_token: token };
   }
 }
