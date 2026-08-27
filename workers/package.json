@@ -1,0 +1,19 @@
+{
+  "name": "solana-terminal-workers",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "ts-node src/index.ts",
+    "build": "tsc"
+  },
+  "dependencies": {
+    "bullmq": "5.12.12",
+    "ioredis": "5.4.1",
+    "@solana/web3.js": "1.95.3"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.11",
+    "ts-node": "10.9.2",
+    "typescript": "5.5.3"
+  }
+}
