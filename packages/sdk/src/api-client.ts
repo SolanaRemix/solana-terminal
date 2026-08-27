@@ -1,4 +1,4 @@
-import type { Strategy, WalletAccount, Signal } from './types';
+import type { Strategy, WalletAccount, Signal, Position } from './types';
 
 /**
  * Thin API client for the Solana Elite Terminal backend.
@@ -38,6 +38,45 @@ export class TerminalApiClient {
     return this.request<{ message: string }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify({ email, password }),
+    });
+  }
+
+  // ── Positions ───────────────────────────────────────────────────────────────
+
+  getPositions() {
+    return this.request<Position[]>('/positions');
+  }
+
+  getOpenPositions() {
+    return this.request<Position[]>('/positions/open');
+  }
+
+  openPosition(dto: {
+    market: string;
+    side: 'long' | 'short';
+    leverage: number;
+    size: number;
+    entryPrice: number;
+    takeProfit?: number;
+    stopLoss?: number;
+  }) {
+    return this.request<Position>('/positions', {
+      method: 'POST',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  updatePosition(id: string, dto: { takeProfit?: number; stopLoss?: number }) {
+    return this.request<Position>(`/positions/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(dto),
+    });
+  }
+
+  closePosition(id: string, exitPrice: number) {
+    return this.request<Position>(`/positions/${id}`, {
+      method: 'DELETE',
+      body: JSON.stringify({ exitPrice }),
     });
   }
 

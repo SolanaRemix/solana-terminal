@@ -41,6 +41,10 @@ export interface Position {
   entryPrice: number;
   takeProfit?: number;
   stopLoss?: number;
+  status: 'open' | 'closed';
+  createdAt: string;
+  closedAt?: string;
+  pnl?: number;
 }
 
 export interface Trade {
@@ -49,6 +53,39 @@ export interface Trade {
   txHash: string;
   pnl: number;
   timestamp: string;
+}
+
+/** A pending or filled order (pre-position). */
+export interface Order {
+  id: string;
+  userId: string;
+  market: string;
+  side: 'long' | 'short';
+  type: 'market' | 'limit';
+  leverage: number;
+  size: number;
+  limitPrice?: number;
+  takeProfit?: number;
+  stopLoss?: number;
+  status: 'pending' | 'filled' | 'cancelled';
+  createdAt: string;
+  filledAt?: string;
+}
+
+/** A new token launch detected on Pump.fun. */
+export interface PumpLaunch {
+  mint: string;
+  name?: string;
+  symbol?: string;
+  riskScore: number;       // 0–100
+  launchers: string[];     // known launcher wallet addresses
+  liquidityUsd: number;
+  volumeUsd: number;
+  holderCount?: number;
+  liquidityLocked: boolean;
+  mintAuthorityRevoked: boolean;
+  freezeAuthorityRevoked: boolean;
+  detectedAt: string;
 }
 
 /** Opportunity indicator names */

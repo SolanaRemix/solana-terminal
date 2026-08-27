@@ -2,8 +2,10 @@ import Link from 'next/link';
 
 const NAV_ITEMS = [
   { label: 'Dashboard',  href: '/dashboard' },
+  { label: 'Trade',      href: '/trade' },
   { label: 'Strategies', href: '/strategies' },
   { label: 'Pump Radar', href: '/pump-radar' },
+  { label: 'Swap',       href: '/swap' },
   { label: 'Wallet',     href: '/wallet' },
 ];
 
