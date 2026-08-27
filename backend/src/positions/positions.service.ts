@@ -89,12 +89,11 @@ export class PositionsService {
       throw new BadRequestException('Position is already closed');
     }
 
+    // size is in base-asset units (e.g. SOL); effective notional = size * leverage.
+    // PnL in quote currency = priceDiff * size * leverage (long: positive when price rises).
     const priceDiff = exitPrice - position.entryPrice;
     const directionMultiplier = position.side === 'long' ? 1 : -1;
-    position.pnl =
-      ((priceDiff * directionMultiplier) / position.entryPrice) *
-      position.size *
-      position.leverage;
+    position.pnl = priceDiff * directionMultiplier * position.size * position.leverage;
     position.status = 'closed';
     position.closedAt = new Date().toISOString();
     return position;
