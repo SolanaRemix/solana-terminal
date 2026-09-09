@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+html, body {
+  background-color: #050a14;
+  color: #e8f4ff;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Glassmorphism panel utility */
+.glass-panel {
+  background: rgba(10, 18, 32, 0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(0, 240, 255, 0.12);
+  border-radius: 0.75rem;
+}
+
+/* Neon glow text */
+.glow-text {
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.8);
+}
