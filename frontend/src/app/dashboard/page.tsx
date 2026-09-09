@@ -22,12 +22,8 @@ export default function DashboardPage() {
   const esRef = useRef<EventSource | null>(null);
 
   useEffect(() => {
-    const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
-
-    // Append token as query param because EventSource doesn't support custom headers.
-    const url = `${apiUrl}/signals/stream${token ? `?token=${encodeURIComponent(token)}` : ''}`;
-    const es = new EventSource(url);
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+    const es = new EventSource(`${apiUrl}/signals/stream`, { withCredentials: true });
     esRef.current = es;
 
     es.onmessage = (e) => {

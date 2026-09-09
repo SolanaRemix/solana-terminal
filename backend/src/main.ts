@@ -7,7 +7,10 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
-  app.enableCors({ origin: process.env.FRONTEND_URL ?? 'http://localhost:3000' });
+  app.enableCors({
+    origin: process.env.FRONTEND_URL ?? 'http://localhost:3000',
+    credentials: true,
+  });
   await app.listen(process.env.PORT ?? 4000, '0.0.0.0');
 }
 bootstrap();

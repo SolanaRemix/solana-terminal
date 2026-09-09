@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { randomUUID } from 'crypto';
 import * as bcrypt from 'bcrypt';
@@ -11,6 +11,9 @@ export class AuthService {
   constructor(private readonly jwtService: JwtService) {}
 
   async register(email: string, password: string) {
+    if (USERS.has(email)) {
+      throw new ConflictException('Email already registered');
+    }
     const passwordHash = await bcrypt.hash(password, 12);
     USERS.set(email, { id: randomUUID(), passwordHash, tier: 'free' });
     return { message: 'User registered' };

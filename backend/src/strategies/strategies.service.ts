@@ -16,14 +16,16 @@ export class StrategiesService {
     return strategy;
   }
 
-  setStatus(id: string, status: string): Strategy {
+  setStatus(id: string, userId: string, status: string): Strategy {
     const s = STORE.get(id);
-    if (!s) throw new NotFoundException();
+    if (!s || s.userId !== userId) throw new NotFoundException();
     s.status = status;
     return s;
   }
 
-  remove(id: string): { deleted: boolean } {
+  remove(id: string, userId: string): { deleted: boolean } {
+    const s = STORE.get(id);
+    if (!s || s.userId !== userId) throw new NotFoundException();
     STORE.delete(id);
     return { deleted: true };
   }

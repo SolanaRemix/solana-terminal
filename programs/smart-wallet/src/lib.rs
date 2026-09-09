@@ -10,6 +10,7 @@ declare_id!("SW1tWa11et1111111111111111111111111111111111");
 #[program]
 pub mod smart_wallet {
     use super::*;
+    const MAX_SUB_ACCOUNTS: usize = 8;
 
     /// Initialize a new SmartWallet for the caller.
     pub fn initialize(ctx: Context<Initialize>, bump: u8) -> Result<()> {
@@ -26,6 +27,10 @@ pub mod smart_wallet {
     pub fn add_sub_account(ctx: Context<ManageSubAccount>, sub: Pubkey) -> Result<()> {
         let wallet = &mut ctx.accounts.smart_wallet;
         require!(!wallet.sub_accounts.contains(&sub), SmartWalletError::AlreadyExists);
+        require!(
+            wallet.sub_accounts.len() < MAX_SUB_ACCOUNTS,
+            SmartWalletError::MaxSubAccountsReached
+        );
         wallet.sub_accounts.push(sub);
         Ok(())
     }
@@ -95,4 +100,6 @@ impl SmartWallet {
 pub enum SmartWalletError {
     #[msg("Sub-account already exists")]
     AlreadyExists,
+    #[msg("Maximum sub-accounts reached")]
+    MaxSubAccountsReached,
 }

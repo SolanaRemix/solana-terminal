@@ -18,17 +18,17 @@ export class StrategiesController {
   }
 
   @Patch(':id/start')
-  start(@Param('id') id: string) {
-    return this.svc.setStatus(id, 'active');
+  start(@Request() req: any, @Param('id') id: string) {
+    return this.svc.setStatus(id, req.user.userId, 'active');
   }
 
   @Patch(':id/pause')
-  pause(@Param('id') id: string) {
-    return this.svc.setStatus(id, 'paused');
+  pause(@Request() req: any, @Param('id') id: string) {
+    return this.svc.setStatus(id, req.user.userId, 'paused');
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.svc.remove(id);
+  remove(@Request() req: any, @Param('id') id: string) {
+    return this.svc.remove(id, req.user.userId);
   }
 }

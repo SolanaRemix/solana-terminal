@@ -10,6 +10,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       // (needed for EventSource / SSE, which cannot set custom headers).
       jwtFromRequest: ExtractJwt.fromExtractors([
         ExtractJwt.fromAuthHeaderAsBearerToken(),
+        (req: { headers?: { cookie?: string } }) => {
+          const cookieHeader = req?.headers?.cookie;
+          if (!cookieHeader) return null;
+          const tokenCookie = cookieHeader
+            .split(';')
+            .map(part => part.trim())
+            .find(part => part.startsWith('access_token='));
+          return tokenCookie ? decodeURIComponent(tokenCookie.split('=').slice(1).join('=')) : null;
+        },
         (req: { query?: Record<string, string> }) =>
           req?.query?.['token'] ?? null,
       ]),

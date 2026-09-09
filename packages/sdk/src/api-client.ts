@@ -118,8 +118,12 @@ export class TerminalApiClient {
   }
 
   /** Open an SSE connection for live signals. */
-  streamSignals(onMessage: (data: unknown) => void): EventSource {
-    const es = new EventSource(`${this.baseUrl}/signals/stream`);
+  streamSignals(onMessage: (data: unknown) => void, token?: string): EventSource {
+    const authToken = token ?? this.token;
+    const url = authToken
+      ? `${this.baseUrl}/signals/stream?token=${encodeURIComponent(authToken)}`
+      : `${this.baseUrl}/signals/stream`;
+    const es = new EventSource(url);
     es.onmessage = e => onMessage(JSON.parse(e.data as string));
     return es;
   }

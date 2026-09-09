@@ -21,9 +21,10 @@ export default function LoginPage() {
     setLoading(true);
     try {
       const endpoint = mode === 'login' ? '/auth/login' : '/auth/register';
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}${endpoint}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password }),
       });
       if (!res.ok) {
